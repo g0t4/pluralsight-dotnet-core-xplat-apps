@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Xunit;
 
 namespace Tests
@@ -6,9 +7,18 @@ namespace Tests
     public class Tests
     {
         [Fact]
-        public void Test1()
+        public void WithoutHttpAtStartOfLink_NoLinks()
         {
-            Assert.True(true);
+	        var links = LinkChecker.GetLinks("<a href=\"google.com\" />");
+	        Assert.Equal(links.Count(), 0);
         }
-    }
+
+		[Fact]
+		public void WithHttpAtStartOfLink_LinkParses()
+		{
+			var links = LinkChecker.GetLinks("<a href=\"http://google.com\" />");
+			Assert.Equal(links.Count(), 1);
+			Assert.Equal(links.First(), "http://google.com");
+		}
+	}
 }

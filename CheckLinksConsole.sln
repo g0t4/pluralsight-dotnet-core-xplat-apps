@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26020.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CheckLinksConsole", "CheckLinksConsole\CheckLinksConsole.csproj", "{901A6A8B-D0DA-4F75-8380-F431A304A7A3}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CheckLinksTests", "CheckLinksTests\CheckLinksTests.csproj", "{25292A28-0E41-435B-B706-4C7F6EAB8F06}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,18 @@ Global
 		{901A6A8B-D0DA-4F75-8380-F431A304A7A3}.Release|x64.Build.0 = Release|x64
 		{901A6A8B-D0DA-4F75-8380-F431A304A7A3}.Release|x86.ActiveCfg = Release|x86
 		{901A6A8B-D0DA-4F75-8380-F431A304A7A3}.Release|x86.Build.0 = Release|x86
+		{25292A28-0E41-435B-B706-4C7F6EAB8F06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25292A28-0E41-435B-B706-4C7F6EAB8F06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25292A28-0E41-435B-B706-4C7F6EAB8F06}.Debug|x64.ActiveCfg = Debug|x64
+		{25292A28-0E41-435B-B706-4C7F6EAB8F06}.Debug|x64.Build.0 = Debug|x64
+		{25292A28-0E41-435B-B706-4C7F6EAB8F06}.Debug|x86.ActiveCfg = Debug|x86
+		{25292A28-0E41-435B-B706-4C7F6EAB8F06}.Debug|x86.Build.0 = Debug|x86
+		{25292A28-0E41-435B-B706-4C7F6EAB8F06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25292A28-0E41-435B-B706-4C7F6EAB8F06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25292A28-0E41-435B-B706-4C7F6EAB8F06}.Release|x64.ActiveCfg = Release|x64
+		{25292A28-0E41-435B-B706-4C7F6EAB8F06}.Release|x64.Build.0 = Release|x64
+		{25292A28-0E41-435B-B706-4C7F6EAB8F06}.Release|x86.ActiveCfg = Release|x86
+		{25292A28-0E41-435B-B706-4C7F6EAB8F06}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -9,6 +9,7 @@ class Program
 	static void Main(string[] args)
 	{
 		var configBuilder = new ConfigurationBuilder()
+			.AddEnvironmentVariables()
 			.AddCommandLine(args);
 		var configuration = configBuilder.Build();
 		var site = configuration["site"];

@@ -7,8 +7,13 @@ class Program
 {
 	static void Main(string[] args)
 	{
-		var file = Path.GetTempFileName();
-		Console.WriteLine($"Saving report to {file}");
+		var currentDirectory = Directory.GetCurrentDirectory();
+		var outputFolder = "reports";
+		var outputFile = "report.txt";
+		var outputPath = Path.Combine(currentDirectory, outputFolder, outputFile);
+		var directory = Path.GetDirectoryName(outputPath);
+		Directory.CreateDirectory(directory);
+		Console.WriteLine($"Saving report to {outputPath}");
 		var site = "https://g0t4.github.io/pluralsight-dotnet-core-xplat-apps";
 		var client = new HttpClient();
 		var body = client.GetStringAsync(site);
@@ -19,6 +24,6 @@ class Program
 		var links = LinkChecker.GetLinks(body.Result);
 		links.ToList().ForEach(Console.WriteLine);
 		// write out links
-		File.WriteAllLines(file, links);
+		File.WriteAllLines(outputPath, links);
 	}
 }

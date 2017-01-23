@@ -24,6 +24,7 @@ class Program
 		var links = LinkChecker.GetLinks(body.Result);
 		links.ToList().ForEach(Console.WriteLine);
 		// write out links
-		File.WriteAllLines(outputPath, links);
+		//File.WriteAllLines(outputPath, links);
+		LinkChecker.CheckLinks(links);
 	}
 }

@@ -25,6 +25,14 @@ class Program
 		links.ToList().ForEach(Console.WriteLine);
 		// write out links
 		//File.WriteAllLines(outputPath, links);
-		LinkChecker.CheckLinks(links);
+		var checkedLinks = LinkChecker.CheckLinks(links);
+		using (var file = File.CreateText(outputPath))
+		{
+			foreach (var link in checkedLinks.OrderBy(l => l.Exists))
+			{
+				var status = link.IsMissing ? "missing" : "OK";
+				file.WriteLine($"{status} - {link.Link}");
+			}
+		}
 	}
 }

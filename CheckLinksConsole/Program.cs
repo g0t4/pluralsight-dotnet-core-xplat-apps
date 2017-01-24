@@ -14,6 +14,7 @@ namespace CheckLinksConsole
 			var factory = new LoggerFactory();
 			var logger = factory.CreateLogger("main");
 			factory.AddConsole(LogLevel.Debug);
+			factory.AddFile("logs/checklinks-{Date}.txt");
 			var config = new Config(args);
 			Directory.CreateDirectory(config.Output.GetReportDirectory());
 			

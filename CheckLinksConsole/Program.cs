@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -8,7 +9,14 @@ class Program
 {
 	static void Main(string[] args)
 	{
+		var inMemory = new Dictionary<string, string>
+		{
+			{"site", "https://g0t4.github.io/pluralsight-dotnet-core-xplat-apps" }
+		};
 		var configBuilder = new ConfigurationBuilder()
+			.AddInMemoryCollection(inMemory)
+			.SetBasePath(Directory.GetCurrentDirectory())
+			.AddJsonFile("checksettings.json",true)
 			.AddCommandLine(args)
 			.AddEnvironmentVariables();
 
@@ -22,7 +30,6 @@ class Program
 		var directory = Path.GetDirectoryName(outputPath);
 		Directory.CreateDirectory(directory);
 		Console.WriteLine($"Saving report to {outputPath}");
-		//var site = "https://g0t4.github.io/pluralsight-dotnet-core-xplat-apps";
 		var client = new HttpClient();
 		var body = client.GetStringAsync(site);
 		Console.WriteLine(body.Result);

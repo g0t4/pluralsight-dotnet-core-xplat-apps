@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -36,8 +35,8 @@ public class LinkChecker
 			{
 				var response = await client.SendAsync(request);
 				result.Problem = response.IsSuccessStatusCode
-						? null
-						: response.StatusCode.ToString();
+					? null
+					: response.StatusCode.ToString();
 				return result;
 			}
 			catch (HttpRequestException exception)

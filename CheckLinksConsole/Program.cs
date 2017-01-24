@@ -1,62 +1,34 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using Microsoft.Extensions.Configuration;
 
-class Program
+namespace CheckLinksConsole
 {
-	public class OutputSettings
+	class Program
 	{
-		public OutputSettings()
+		static void Main(string[] args)
 		{
-			File = "file.txt";
-		}
-		public string Folder { get; set; }
-		public string File { get; set; }
-	}
+			var config = new Config(args);
+			Directory.CreateDirectory(config.Output.GetReportDirectory());
+			Console.WriteLine($"Saving report to {config.Output.GetReportFilePath()}");
+			var client = new HttpClient();
+			var body = client.GetStringAsync(config.Site);
+			Console.WriteLine(body.Result);
 
-	static void Main(string[] args)
-	{
-		var inMemory = new Dictionary<string, string>
-		{
-			{"site", "https://g0t4.github.io/pluralsight-dotnet-core-xplat-apps" },
-			{"output:folder", "reports" },
-		};
-		var configBuilder = new ConfigurationBuilder()
-			.AddInMemoryCollection(inMemory)
-			.SetBasePath(Directory.GetCurrentDirectory())
-			.AddJsonFile("checksettings.json",true)
-			.AddCommandLine(args)
-			.AddEnvironmentVariables();
-
-		var configuration = configBuilder.Build();
-		var site = configuration["site"];
-
-		var outputSettings = configuration.GetSection("output").Get<OutputSettings>();
-		var currentDirectory = Directory.GetCurrentDirectory();
-		var outputPath = Path.Combine(currentDirectory, outputSettings.Folder, outputSettings.File);
-		var directory = Path.GetDirectoryName(outputPath);
-		Directory.CreateDirectory(directory);
-		Console.WriteLine($"Saving report to {outputPath}");
-		var client = new HttpClient();
-		var body = client.GetStringAsync(site);
-		Console.WriteLine(body.Result);
-
-		Console.WriteLine();
-		Console.WriteLine("Links");
-		var links = LinkChecker.GetLinks(body.Result);
-		links.ToList().ForEach(Console.WriteLine);
-		// write out links
-		//File.WriteAllLines(outputPath, links);
-		var checkedLinks = LinkChecker.CheckLinks(links);
-		using (var file = File.CreateText(outputPath))
-		{
-			foreach (var link in checkedLinks.OrderBy(l => l.Exists))
+			Console.WriteLine();
+			Console.WriteLine("Links");
+			var links = LinkChecker.GetLinks(body.Result);
+			links.ToList().ForEach(Console.WriteLine);
+			// write out links
+			var checkedLinks = LinkChecker.CheckLinks(links);
+			using (var file = File.CreateText(config.Output.GetReportFilePath()))
 			{
-				var status = link.IsMissing ? "missing" : "OK";
-				file.WriteLine($"{status} - {link.Link}");
+				foreach (var link in checkedLinks.OrderBy(l => l.Exists))
+				{
+					var status = link.IsMissing ? "missing" : "OK";
+					file.WriteLine($"{status} - {link.Link}");
+				}
 			}
 		}
 	}

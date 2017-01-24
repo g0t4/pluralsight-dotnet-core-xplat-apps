@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using CheckLinksConsole;
 using HtmlAgilityPack;
+using Microsoft.Extensions.Logging;
 
 public class LinkChecker
 {
@@ -11,8 +13,12 @@ public class LinkChecker
 	{
 		var htmlDocument = new HtmlDocument();
 		htmlDocument.LoadHtml(page);
-		var links = htmlDocument.DocumentNode.SelectNodes("//a[@href]")
+		var originalLinks = htmlDocument.DocumentNode.SelectNodes("//a[@href]")
 			.Select(n => n.GetAttributeValue("href", string.Empty))
+			.ToArray();
+		var logger = Logs.Factory.CreateLogger<LinkChecker>();
+		logger.LogTrace(String.Join(",", originalLinks));
+		var links = originalLinks
 			.Where(l => !String.IsNullOrEmpty(l))
 			.Where(l => l.StartsWith("http"));
 		return links;

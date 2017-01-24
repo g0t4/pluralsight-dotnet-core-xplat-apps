@@ -5,18 +5,23 @@ using System.Net.Http;
 
 namespace CheckLinksConsole
 {
+	using Microsoft.Extensions.Logging;
+
 	class Program
 	{
 		static void Main(string[] args)
 		{
+			var factory = new LoggerFactory();
+			var logger = factory.CreateLogger("main");
+			factory.AddConsole();
 			var config = new Config(args);
 			Directory.CreateDirectory(config.Output.GetReportDirectory());
-			Console.WriteLine($"Saving report to {config.Output.GetReportFilePath()}");
+			
+			logger.LogInformation($"Saving report to {config.Output.GetReportFilePath()}");
 			var client = new HttpClient();
 			var body = client.GetStringAsync(config.Site);
-			Console.WriteLine(body.Result);
+			logger.LogInformation(body.Result);
 
-			Console.WriteLine();
 			Console.WriteLine("Links");
 			var links = LinkChecker.GetLinks(body.Result);
 			links.ToList().ForEach(Console.WriteLine);

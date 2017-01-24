@@ -19,7 +19,7 @@ public class LinkChecker
 		var logger = Logs.Factory.CreateLogger<LinkChecker>();
 		using (logger.BeginScope($"Getting links from {link}"))
 		{
-			originalLinks.ForEach(l => logger.LogTrace(l));
+			originalLinks.ForEach(l => logger.LogTrace(100, "Original link: {link}", l));
 		}
 		var links = originalLinks
 			.Where(l => !String.IsNullOrEmpty(l))

@@ -11,7 +11,9 @@ class Program
 	{
 		var inMemory = new Dictionary<string, string>
 		{
-			{"site", "https://g0t4.github.io/pluralsight-dotnet-core-xplat-apps" }
+			{"site", "https://g0t4.github.io/pluralsight-dotnet-core-xplat-apps" },
+			{"output:folder", "reports" },
+			{"output:file", "reports.txt" }
 		};
 		var configBuilder = new ConfigurationBuilder()
 			.AddInMemoryCollection(inMemory)
@@ -24,8 +26,8 @@ class Program
 		var site = configuration["site"];
 		
 		var currentDirectory = Directory.GetCurrentDirectory();
-		var outputFolder = "reports";
-		var outputFile = "report.txt";
+		var outputFolder = configuration["output:folder"]; 
+		var outputFile = configuration["output:file"];
 		var outputPath = Path.Combine(currentDirectory, outputFolder, outputFile);
 		var directory = Path.GetDirectoryName(outputPath);
 		Directory.CreateDirectory(directory);

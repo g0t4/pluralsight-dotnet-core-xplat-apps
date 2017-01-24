@@ -7,13 +7,22 @@ using Microsoft.Extensions.Configuration;
 
 class Program
 {
+	public class OutputSettings
+	{
+		public OutputSettings()
+		{
+			File = "file.txt";
+		}
+		public string Folder { get; set; }
+		public string File { get; set; }
+	}
+
 	static void Main(string[] args)
 	{
 		var inMemory = new Dictionary<string, string>
 		{
 			{"site", "https://g0t4.github.io/pluralsight-dotnet-core-xplat-apps" },
 			{"output:folder", "reports" },
-			{"output:file", "reports.txt" }
 		};
 		var configBuilder = new ConfigurationBuilder()
 			.AddInMemoryCollection(inMemory)
@@ -24,11 +33,11 @@ class Program
 
 		var configuration = configBuilder.Build();
 		var site = configuration["site"];
-		
+
+		var outputSettings = new OutputSettings();
+		configuration.GetSection("output").Bind(outputSettings);
 		var currentDirectory = Directory.GetCurrentDirectory();
-		var outputFolder = configuration["output:folder"]; 
-		var outputFile = configuration["output:file"];
-		var outputPath = Path.Combine(currentDirectory, outputFolder, outputFile);
+		var outputPath = Path.Combine(currentDirectory, outputSettings.Folder, outputSettings.File);
 		var directory = Path.GetDirectoryName(outputPath);
 		Directory.CreateDirectory(directory);
 		Console.WriteLine($"Saving report to {outputPath}");

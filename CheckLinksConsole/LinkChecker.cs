@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 public class LinkChecker
 {
-	public static IEnumerable<string> GetLinks(string page)
+	public static IEnumerable<string> GetLinks(string link, string page)
 	{
 		var htmlDocument = new HtmlDocument();
 		htmlDocument.LoadHtml(page);
@@ -17,7 +17,10 @@ public class LinkChecker
 			.Select(n => n.GetAttributeValue("href", string.Empty))
 			.ToList();
 		var logger = Logs.Factory.CreateLogger<LinkChecker>();
-		originalLinks.ForEach(l => logger.LogTrace(l));
+		using (logger.BeginScope($"Getting links from {link}"))
+		{
+			originalLinks.ForEach(l => logger.LogTrace(l));
+		}
 		var links = originalLinks
 			.Where(l => !String.IsNullOrEmpty(l))
 			.Where(l => l.StartsWith("http"));

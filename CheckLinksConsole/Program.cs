@@ -20,7 +20,7 @@ namespace CheckLinksConsole
 			var body = client.GetStringAsync(config.Site);
 			logger.LogDebug(body.Result);
 
-			var links = LinkChecker.GetLinks(body.Result);
+			var links = LinkChecker.GetLinks(config.Site, body.Result);
 			return;
 			// write out links
 			var checkedLinks = LinkChecker.CheckLinks(links);

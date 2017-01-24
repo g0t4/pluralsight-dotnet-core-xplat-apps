@@ -9,7 +9,7 @@ namespace CheckLinksConsole
 
 		static Logs()
 		{
-			Factory.AddConsole(LogLevel.Trace);
+			Factory.AddConsole(LogLevel.Trace, includeScopes: true);
 			Factory.AddFile("logs/checklinks-{Date}.txt", minimumLevel: LogLevel.Trace);
 		}
 	}

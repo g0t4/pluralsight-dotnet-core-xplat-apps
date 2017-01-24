@@ -34,8 +34,7 @@ class Program
 		var configuration = configBuilder.Build();
 		var site = configuration["site"];
 
-		var outputSettings = new OutputSettings();
-		configuration.GetSection("output").Bind(outputSettings);
+		var outputSettings = configuration.GetSection("output").Get<OutputSettings>();
 		var currentDirectory = Directory.GetCurrentDirectory();
 		var outputPath = Path.Combine(currentDirectory, outputSettings.Folder, outputSettings.File);
 		var directory = Path.GetDirectoryName(outputPath);

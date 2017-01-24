@@ -13,14 +13,14 @@ namespace CheckLinksConsole
 		{
 			var factory = new LoggerFactory();
 			var logger = factory.CreateLogger("main");
-			factory.AddConsole();
+			factory.AddConsole(LogLevel.Debug);
 			var config = new Config(args);
 			Directory.CreateDirectory(config.Output.GetReportDirectory());
 			
 			logger.LogInformation($"Saving report to {config.Output.GetReportFilePath()}");
 			var client = new HttpClient();
 			var body = client.GetStringAsync(config.Site);
-			logger.LogInformation(body.Result);
+			logger.LogDebug(body.Result);
 
 			Console.WriteLine("Links");
 			var links = LinkChecker.GetLinks(body.Result);

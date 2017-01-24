@@ -15,9 +15,9 @@ public class LinkChecker
 		htmlDocument.LoadHtml(page);
 		var originalLinks = htmlDocument.DocumentNode.SelectNodes("//a[@href]")
 			.Select(n => n.GetAttributeValue("href", string.Empty))
-			.ToArray();
+			.ToList();
 		var logger = Logs.Factory.CreateLogger<LinkChecker>();
-		logger.LogTrace(String.Join(",", originalLinks));
+		originalLinks.ForEach(l => logger.LogTrace(l));
 		var links = originalLinks
 			.Where(l => !String.IsNullOrEmpty(l))
 			.Where(l => l.StartsWith("http"));

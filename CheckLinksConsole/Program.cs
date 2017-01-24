@@ -20,9 +20,8 @@ namespace CheckLinksConsole
 			var body = client.GetStringAsync(config.Site);
 			logger.LogDebug(body.Result);
 
-			Console.WriteLine("Links");
 			var links = LinkChecker.GetLinks(body.Result);
-			links.ToList().ForEach(Console.WriteLine);
+			return;
 			// write out links
 			var checkedLinks = LinkChecker.CheckLinks(links);
 			using (var file = File.CreateText(config.Output.GetReportFilePath()))

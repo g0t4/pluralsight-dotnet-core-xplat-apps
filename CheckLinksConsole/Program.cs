@@ -21,7 +21,7 @@ namespace CheckLinksConsole
 			logger.LogDebug(body.Result);
 
 			var links = LinkChecker.GetLinks(config.Site, body.Result);
-			//return;
+			return;
 			// write out links
 			var checkedLinks = LinkChecker.CheckLinks(links);
 			using (var file = File.CreateText(config.Output.GetReportFilePath()))

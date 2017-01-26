@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CheckLinksConsole;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Logging;
+using System.ComponentModel.DataAnnotations.Schema;
 
 public class LinkChecker
 {
@@ -61,6 +62,7 @@ public class LinkChecker
 
 public class LinkCheckResult
 {
+    [Column("ID")]
 	public int Id { get; set; }
 	public bool Exists => String.IsNullOrWhiteSpace(Problem);
 	public bool IsMissing => !Exists;

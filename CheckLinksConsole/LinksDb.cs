@@ -14,8 +14,12 @@ namespace CheckLinksConsole
             //optionsBuilder.UseSqlServer(connection);
 
             // MySQL (Pomelo):
-            var connection = "server=localhost;userid=root;pwd=password;database=Links;sslmode=none;";
-            optionsBuilder.UseMySql(connection);
+            //var connection = "server=localhost;userid=root;pwd=password;database=Links;sslmode=none;";
+            //optionsBuilder.UseMySql(connection);
+
+            // PostgreSQL (Npgsql):
+            var connection = "Host=localhost;Database=Links;Username=postgres;Password=password";
+            optionsBuilder.UseNpgsql(connection);
         }
 	}
 }

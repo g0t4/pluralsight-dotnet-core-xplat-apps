@@ -11,8 +11,9 @@ namespace CheckLinksConsole
 	{
 		static void Main(string[] args)
 		{
-			var logger = Logs.Factory.CreateLogger<Program>();
 			var config = new Config(args);
+			Logs.Init(config.ConfigurationRoot);
+			var logger = Logs.Factory.CreateLogger<Program>();
 			Directory.CreateDirectory(config.Output.GetReportDirectory());
 			
 			logger.LogInformation(200, $"Saving report to {config.Output.GetReportFilePath()}");

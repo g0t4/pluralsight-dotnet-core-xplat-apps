@@ -1,31 +1,33 @@
 ﻿
 namespace CheckLinksConsole
 {
-    using Microsoft.EntityFrameworkCore;
-    using System.IO;
+	using Microsoft.EntityFrameworkCore;
 
-	public class LinksDb : DbContext 
+	public class LinksDb : DbContext
 	{
-        public DbSet<LinkCheckResult> Links {get;set;}
+		public LinksDb(DbContextOptions<LinksDb> options) : base(options)
+		{ }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            // MSSQL:
-            //var connection = @"Server=localhost;Database=Links;User Id=sa;Password=whatever12!";
-            //optionsBuilder.UseSqlServer(connection);
+		public DbSet<LinkCheckResult> Links { get; set; }
 
-            // MySQL (Pomelo):
-            //var connection = "server=localhost;userid=root;pwd=password;database=Links;sslmode=none;";
-            //optionsBuilder.UseMySql(connection);
+		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		{
+			// MSSQL:
+			//var connection = @"Server=localhost;Database=Links;User Id=sa;Password=whatever12!";
+			//optionsBuilder.UseSqlServer(connection);
 
-            // PostgreSQL (Npgsql):
-            //var connection = "Host=localhost;Database=Links;Username=postgres;Password=password";
-            //optionsBuilder.UseNpgsql(connection);
-            
-            // SQLite:
-            var databaseLocation = Path.Combine(Directory.GetCurrentDirectory(), "links.db");
-            optionsBuilder.UseSqlite($"Filename={databaseLocation}");
+			// MySQL (Pomelo):
+			//var connection = "server=localhost;userid=root;pwd=password;database=Links;sslmode=none;";
+			//optionsBuilder.UseMySql(connection);
 
-        }
+			// PostgreSQL (Npgsql):
+			//var connection = "Host=localhost;Database=Links;Username=postgres;Password=password";
+			//optionsBuilder.UseNpgsql(connection);
+
+			// SQLite:
+			//var databaseLocation = Path.Combine(Directory.GetCurrentDirectory(), "links.db");
+			//optionsBuilder.UseSqlite($"Filename={databaseLocation}");
+
+		}
 	}
 }

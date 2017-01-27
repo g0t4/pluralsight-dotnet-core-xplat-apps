@@ -9,6 +9,7 @@ namespace CheckLinksConsole
 	using Hangfire.MemoryStorage;
 	using Microsoft.AspNetCore.Builder;
 	using Microsoft.AspNetCore.Hosting;
+	using Microsoft.EntityFrameworkCore;
 	using Microsoft.Extensions.Configuration;
 	using Microsoft.Extensions.DependencyInjection;
 	using Microsoft.Extensions.Logging;
@@ -35,12 +36,15 @@ namespace CheckLinksConsole
 	{
 		private readonly ILogger<CheckLinks> _Logger;
 		private readonly LinkChecker _Checker;
+		private readonly LinksDb _LinksDb;
 		private readonly Config _Config;
 
-		public CheckLinks(ILogger<CheckLinks> logger, IOptions<Config> config, LinkChecker checker)
+		public CheckLinks(ILogger<CheckLinks> logger, IOptions<Config> config,
+			LinkChecker checker, LinksDb linksDb)
 		{
 			_Logger = logger;
 			_Checker = checker;
+			_LinksDb = linksDb;
 			_Config = config.Value;
 		}
 
@@ -58,15 +62,14 @@ namespace CheckLinksConsole
 
 			var checkedLinks = _Checker.CheckLinks(links);
 			using (var file = File.CreateText(_Config.Output.GetReportFilePath()))
-			using (var linksDb = new LinksDb())
 			{
 				foreach (var link in checkedLinks.OrderBy(l => l.Exists))
 				{
 					var status = link.IsMissing ? "missing" : "OK";
 					file.WriteLine($"{status} - {link.Link}");
-					linksDb.Links.Add(link);
+					_LinksDb.Links.Add(link);
 				}
-				linksDb.SaveChanges();
+				_LinksDb.SaveChanges();
 			}
 		}
 	}
@@ -90,6 +93,12 @@ namespace CheckLinksConsole
 			services.AddTransient<CheckLinks>();
 			services.AddTransient<LinkChecker>();
 			services.Configure<Config>(Configuration);
+			services.AddDbContext<LinksDb>(optionsBuilder =>
+			{
+				var databaseLocation = Path.Combine(Directory.GetCurrentDirectory(), "links.db");
+				// here we could globally get config of db from ConfigurationRoot, could also inject this connection string into any classes that want to new up a LinksDb and achieve the same thing maybe with less hassle and less mystery
+				optionsBuilder.UseSqlite($"Filename={databaseLocation}");
+			});
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -6,7 +6,7 @@ namespace CheckLinksConsole
 {
 	public class Config
 	{
-		public Config(string[] args)
+		public static IConfigurationRoot SetupConfig(string[] args)
 		{
 			var inMemory = new Dictionary<string, string>
 			{
@@ -20,14 +20,10 @@ namespace CheckLinksConsole
 				.AddCommandLine(args)
 				.AddEnvironmentVariables();
 
-			var configuration = configBuilder.Build();
-			ConfigurationRoot = configuration;
-			Site = configuration["site"];
-			Output = configuration.GetSection("output").Get<OutputSettings>();
+			return configBuilder.Build();
 		}
 
 		public string Site { get; set; }
 		public OutputSettings Output { get; set; }
-		public IConfigurationRoot ConfigurationRoot { get; set; }
 	}
 }

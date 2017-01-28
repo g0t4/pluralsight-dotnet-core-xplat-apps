@@ -13,6 +13,9 @@ namespace CheckLinksConsole
 	{
 		static void Main(string[] args)
 		{
+			var config = new Config(args);
+			Logs.Init(config.ConfigurationRoot);
+
 			GlobalConfiguration.Configuration.UseMemoryStorage();
 
 			RecurringJob.AddOrUpdate(() => Console.WriteLine("\n\nRecurring Job\n\n"), Cron.Minutely);
@@ -22,14 +25,18 @@ namespace CheckLinksConsole
 				Console.WriteLine("Hangfire Server started. Press any key to exit...");
 				Console.ReadKey();
 			}
-			return;
 
+		}
+	}
 
-			var config = new Config(args);
-			Logs.Init(config.ConfigurationRoot);
-			var logger = Logs.Factory.CreateLogger<Program>();
+	public class CheckLinkJob
+	{
+		public void Execute()
+		{
+
+			var logger = Logs.Factory.CreateLogger<CheckLinkJob>();
 			Directory.CreateDirectory(config.Output.GetReportDirectory());
-			
+
 			logger.LogInformation(200, $"Saving report to {config.Output.GetReportFilePath()}");
 			var client = new HttpClient();
 			var body = client.GetStringAsync(config.Site);

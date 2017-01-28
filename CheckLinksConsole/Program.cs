@@ -5,12 +5,26 @@ using System.Net.Http;
 
 namespace CheckLinksConsole
 {
+	using Hangfire;
+	using Hangfire.MemoryStorage;
 	using Microsoft.Extensions.Logging;
 
 	class Program
 	{
 		static void Main(string[] args)
 		{
+			GlobalConfiguration.Configuration.UseMemoryStorage();
+
+			RecurringJob.AddOrUpdate(() => Console.WriteLine("\n\nRecurring Job\n\n"), Cron.Minutely);
+
+			using (var server = new BackgroundJobServer())
+			{
+				Console.WriteLine("Hangfire Server started. Press any key to exit...");
+				Console.ReadKey();
+			}
+			return;
+
+
 			var config = new Config(args);
 			Logs.Init(config.ConfigurationRoot);
 			var logger = Logs.Factory.CreateLogger<Program>();

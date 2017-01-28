@@ -79,8 +79,7 @@ namespace CheckLinksConsole
 	{
 		public Startup(IHostingEnvironment env)
 		{
-			// todo args console
-			Configuration = Config.SetupConfig(new string[0]);
+			Configuration = Config.SetupConfig();
 		}
 
 		public IConfigurationRoot Configuration { get; }

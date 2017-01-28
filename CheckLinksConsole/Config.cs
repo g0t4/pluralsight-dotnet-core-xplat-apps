@@ -4,9 +4,12 @@ using Microsoft.Extensions.Configuration;
 
 namespace CheckLinksConsole
 {
+	using System;
+	using System.Linq;
+
 	public class Config
 	{
-		public static IConfigurationRoot SetupConfig(string[] args)
+		public static IConfigurationRoot SetupConfig()
 		{
 			var inMemory = new Dictionary<string, string>
 			{
@@ -17,7 +20,7 @@ namespace CheckLinksConsole
 				.AddInMemoryCollection(inMemory)
 				.SetBasePath(Directory.GetCurrentDirectory())
 				.AddJsonFile("checksettings.json", true)
-				.AddCommandLine(args)
+				.AddCommandLine(Environment.GetCommandLineArgs().Skip(1).ToArray())
 				.AddEnvironmentVariables();
 
 			return configBuilder.Build();

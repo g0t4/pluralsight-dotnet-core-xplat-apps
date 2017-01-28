@@ -1,13 +1,9 @@
 using System;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
 
 namespace CheckLinksConsole
 {
 	using Hangfire;
 	using Hangfire.MemoryStorage;
-	using Microsoft.Extensions.Logging;
 
 	class Program
 	{
@@ -18,7 +14,8 @@ namespace CheckLinksConsole
 
 			GlobalConfiguration.Configuration.UseMemoryStorage();
 
-			RecurringJob.AddOrUpdate(() => Console.WriteLine("\n\nRecurring Job\n\n"), Cron.Minutely);
+			RecurringJob.AddOrUpdate<CheckLinkJob>("check-link", j => j.Execute(config.Site, config.Output), Cron.Minutely);
+			RecurringJob.Trigger("check-link");
 
 			using (var server = new BackgroundJobServer())
 			{
@@ -26,36 +23,6 @@ namespace CheckLinksConsole
 				Console.ReadKey();
 			}
 
-		}
-	}
-
-	public class CheckLinkJob
-	{
-		public void Execute()
-		{
-
-			var logger = Logs.Factory.CreateLogger<CheckLinkJob>();
-			Directory.CreateDirectory(config.Output.GetReportDirectory());
-
-			logger.LogInformation(200, $"Saving report to {config.Output.GetReportFilePath()}");
-			var client = new HttpClient();
-			var body = client.GetStringAsync(config.Site);
-			logger.LogDebug(body.Result);
-
-			var links = LinkChecker.GetLinks(config.Site, body.Result);
-
-			var checkedLinks = LinkChecker.CheckLinks(links);
-			using (var file = File.CreateText(config.Output.GetReportFilePath()))
-			using (var linksDb = new LinksDb())
-			{
-				foreach (var link in checkedLinks.OrderBy(l => l.Exists))
-				{
-					var status = link.IsMissing ? "missing" : "OK";
-					file.WriteLine($"{status} - {link.Link}");
-					linksDb.Links.Add(link);
-				}
-				linksDb.SaveChanges();
-			}
 		}
 	}
 }

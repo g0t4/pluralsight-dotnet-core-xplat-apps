@@ -1,0 +1,14 @@
+[Unit]
+Description=Check Links .NET Core Service
+
+[Service]
+WorkingDirectory=/app
+ExecStart=/usr/bin/dotnet CheckLinksConsole.dll
+Restart=always
+RestartSec=10
+SyslogIdentifier=check-links
+# Environment=SITE=http://google.com 
+
+[Install]
+WantedBy=multi-user.target
+

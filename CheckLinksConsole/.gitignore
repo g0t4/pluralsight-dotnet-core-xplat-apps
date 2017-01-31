@@ -1,0 +1,4 @@
+.vagrant/
+logs/
+reports/
+links.db

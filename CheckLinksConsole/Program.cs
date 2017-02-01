@@ -1,11 +1,13 @@
-using System;
 
 namespace CheckLinksConsole
 {
-	using Hangfire;
+    using System;
+    using System.IO;
+    using Hangfire;
 	using Hangfire.MemoryStorage;
+    using Microsoft.AspNetCore.Hosting;
 
-	class Program
+    class Program
 	{
 		static void Main(string[] args)
 		{
@@ -17,10 +19,17 @@ namespace CheckLinksConsole
 			RecurringJob.AddOrUpdate<CheckLinkJob>("check-link", j => j.Execute(config.Site, config.Output), Cron.Minutely);
 			RecurringJob.Trigger("check-link");
 
+			var host = new WebHostBuilder()
+                .UseKestrel()
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseStartup<Startup>()
+                .Build();
+
 			using (var server = new BackgroundJobServer())
 			{
-				Console.WriteLine("Hangfire Server started. Press any key to exit...");
-				Console.ReadKey();
+				Console.WriteLine("Hangfire Server started.");
+				//Console.ReadKey();
+				host.Run();
 			}
 
 		}

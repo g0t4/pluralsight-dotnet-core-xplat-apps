@@ -15,6 +15,7 @@ namespace CheckLinksConsole
 
             var host = new WebHostBuilder()
                 .UseKestrel()
+                .UseLoggerFactory(Logs.Factory)
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
                 .Build();

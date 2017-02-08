@@ -5,6 +5,8 @@ namespace CheckLinksConsole
     using System.IO;
     using Hangfire;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.DependencyInjection;
 
     class Program
     {
@@ -19,6 +21,9 @@ namespace CheckLinksConsole
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
                 .Build();
+
+            var loggerFactory = host.Services.GetService<ILoggerFactory>();
+            loggerFactory.CreateLogger<Program>().LogInformation("test");
 
             //RecurringJob.AddOrUpdate<CheckLinkJob>("check-link", j => j.Execute(config.Site, config.Output), Cron.Minutely);
             //RecurringJob.Trigger("check-link");

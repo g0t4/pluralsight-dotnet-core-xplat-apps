@@ -24,6 +24,10 @@ namespace CheckLinksConsole
 
             app.UseHangfireServer();
             app.UseHangfireDashboard();
+
+            RecurringJob.AddOrUpdate<CheckLinkJob>("check-link",
+                j => j.Execute(config.Site, config.Output),
+                Cron.Minutely);
         }
     }
 }

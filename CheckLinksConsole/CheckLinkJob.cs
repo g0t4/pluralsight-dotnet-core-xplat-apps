@@ -11,24 +11,28 @@ namespace CheckLinksConsole
     {
         private ILogger _Logger;
 		private OutputSettings _Output;
+		private SiteSettings _Site;
 
-        public CheckLinkJob(ILogger<CheckLinkJob> logger, IOptions<OutputSettings> outputOptions)
+        public CheckLinkJob(ILogger<CheckLinkJob> logger, 
+			IOptions<OutputSettings> outputOptions,
+			IOptions<SiteSettings> siteOptions)
         {
             _Logger = logger;
             _Logger.LogInformation($"{Guid.NewGuid()}");
 			_Output = outputOptions.Value;
+			_Site = siteOptions.Value;
         }
 
-        public void Execute(string site)
+        public void Execute()
         {
             Directory.CreateDirectory(_Output.GetReportDirectory());
 
             _Logger.LogInformation(200, $"Saving report to {_Output.GetReportFilePath()}");
             var client = new HttpClient();
-            var body = client.GetStringAsync(site);
+            var body = client.GetStringAsync(_Site.Site);
             _Logger.LogDebug(body.Result);
 
-            var links = LinkChecker.GetLinks(site, body.Result);
+            var links = LinkChecker.GetLinks(_Site.Site, body.Result);
 
             var checkedLinks = LinkChecker.CheckLinks(links);
             using (var file = File.CreateText(_Output.GetReportFilePath()))

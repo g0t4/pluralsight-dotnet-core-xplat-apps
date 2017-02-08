@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
@@ -14,8 +16,12 @@ namespace CheckLinksConsole
             services.AddHangfire(c => c.UseMemoryStorage());
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
+            var config = new Config();
+            Logs.Factory = loggerFactory;
+            Logs.Init(config.ConfigurationRoot);
+
             app.UseHangfireServer();
             app.UseHangfireDashboard();
         }

@@ -6,7 +6,7 @@ namespace CheckLinksConsole
 
 	public static class Logs
 	{
-		public static LoggerFactory Factory = new LoggerFactory();
+		public static ILoggerFactory Factory = new LoggerFactory();
 
 		public static void Init(IConfiguration configuration)
 		{

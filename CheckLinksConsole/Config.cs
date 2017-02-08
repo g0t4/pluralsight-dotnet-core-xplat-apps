@@ -1,12 +1,14 @@
 ﻿using System.IO;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.Linq;
 
 namespace CheckLinksConsole
 {
 	public class Config
 	{
-		public Config(string[] args)
+		public Config()
 		{
 			var inMemory = new Dictionary<string, string>
 			{
@@ -17,7 +19,7 @@ namespace CheckLinksConsole
 				.AddInMemoryCollection(inMemory)
 				.SetBasePath(Directory.GetCurrentDirectory())
 				.AddJsonFile("checksettings.json", true)
-				.AddCommandLine(args)
+				.AddCommandLine(Environment.GetCommandLineArgs().Skip(1).ToArray())
 				.AddEnvironmentVariables();
 
 			var configuration = configBuilder.Build();

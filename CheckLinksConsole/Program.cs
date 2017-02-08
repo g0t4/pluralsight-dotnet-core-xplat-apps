@@ -12,12 +12,8 @@ namespace CheckLinksConsole
     {
         static void Main(string[] args)
         {
-            var config = new Config(args);
-            Logs.Init(config.ConfigurationRoot);
-
             var host = new WebHostBuilder()
                 .UseKestrel()
-                .UseLoggerFactory(Logs.Factory)
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
                 .Build();

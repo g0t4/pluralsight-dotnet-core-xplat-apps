@@ -18,7 +18,11 @@ namespace CheckLinksConsole
                 .UseStartup<Startup>()
                 .Build();
 
+            RecurringJob.AddOrUpdate<CheckLinkJob>("check-link",
+                j => j.Execute(),
+                Cron.Minutely);
             RecurringJob.Trigger("check-link");
+
 
             host.Run();
         }

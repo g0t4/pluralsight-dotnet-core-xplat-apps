@@ -20,14 +20,14 @@ namespace CheckLinksConsole
 
             services.AddHangfire(c => c.UseMemoryStorage());
             services.AddTransient<CheckLinkJob>();
+            services.AddTransient<LinkChecker>();
             services.Configure<OutputSettings>(_Config.GetSection("output"));
             services.Configure<SiteSettings>(_Config);
         }
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
-            Logs.Factory = loggerFactory;
-            Logs.Init(_Config);
+            Logs.Init(loggerFactory, _Config);
 
             app.UseHangfireServer();
             app.UseHangfireDashboard();

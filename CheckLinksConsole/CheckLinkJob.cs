@@ -12,15 +12,18 @@ namespace CheckLinksConsole
         private ILogger _Logger;
 		private OutputSettings _Output;
 		private SiteSettings _Site;
+        private LinkChecker _LinkChecker;
 
         public CheckLinkJob(ILogger<CheckLinkJob> logger, 
 			IOptions<OutputSettings> outputOptions,
-			IOptions<SiteSettings> siteOptions)
+			IOptions<SiteSettings> siteOptions,
+            LinkChecker linkChecker)
         {
             _Logger = logger;
             _Logger.LogInformation($"{Guid.NewGuid()}");
 			_Output = outputOptions.Value;
 			_Site = siteOptions.Value;
+            _LinkChecker = linkChecker;
         }
 
         public void Execute()
@@ -32,9 +35,9 @@ namespace CheckLinksConsole
             var body = client.GetStringAsync(_Site.Site);
             _Logger.LogDebug(body.Result);
 
-            var links = LinkChecker.GetLinks(_Site.Site, body.Result);
+            var links = _LinkChecker.GetLinks(_Site.Site, body.Result);
 
-            var checkedLinks = LinkChecker.CheckLinks(links);
+            var checkedLinks = _LinkChecker.CheckLinks(links);
             using (var file = File.CreateText(_Output.GetReportFilePath()))
             using (var linksDb = new LinksDb())
             {

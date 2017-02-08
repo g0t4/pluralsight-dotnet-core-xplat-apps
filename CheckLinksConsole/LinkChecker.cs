@@ -10,18 +10,23 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 public class LinkChecker
 {
-	protected static readonly ILogger<LinkChecker> Logger = Logs.Factory.CreateLogger<LinkChecker>();
+	private ILogger _Logger;
 
-	public static IEnumerable<string> GetLinks(string link, string page)
+	public LinkChecker(ILogger<LinkChecker> logger)
+	{
+		_Logger = logger;	
+	}
+
+	public IEnumerable<string> GetLinks(string link, string page)
 	{
 		var htmlDocument = new HtmlDocument();
 		htmlDocument.LoadHtml(page);
 		var originalLinks = htmlDocument.DocumentNode.SelectNodes("//a[@href]")
 			.Select(n => n.GetAttributeValue("href", string.Empty))
 			.ToList();
-		using (Logger.BeginScope($"Getting links from {link}"))
+		using (_Logger.BeginScope($"Getting links from {link}"))
 		{
-			originalLinks.ForEach(l => Logger.LogTrace(100, "Original link: {link}", l));
+			originalLinks.ForEach(l => _Logger.LogTrace(100, "Original link: {link}", l));
 		}
 		var links = originalLinks
 			.Where(l => !String.IsNullOrEmpty(l))
@@ -29,13 +34,13 @@ public class LinkChecker
 		return links;
 	}
 
-	public static IEnumerable<LinkCheckResult> CheckLinks(IEnumerable<string> links)
+	public IEnumerable<LinkCheckResult> CheckLinks(IEnumerable<string> links)
 	{
 		var all = Task.WhenAll(links.Select(CheckLink));
 		return all.Result;
 	}
 
-	public static async Task<LinkCheckResult> CheckLink(string link)
+	public async Task<LinkCheckResult> CheckLink(string link)
 	{
 		var result = new LinkCheckResult();
 		result.Link = link;
@@ -52,7 +57,7 @@ public class LinkChecker
 			}
 			catch (HttpRequestException exception)
 			{
-				Logger.LogTrace(0, exception, "Failed to retrieve {link}", link);
+				_Logger.LogTrace(0, exception, "Failed to retrieve {link}", link);
 				result.Problem = exception.Message;
 				return result;
 			}

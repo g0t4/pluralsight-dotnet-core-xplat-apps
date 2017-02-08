@@ -25,11 +25,9 @@ namespace CheckLinksConsole
 			var configuration = configBuilder.Build();
 			ConfigurationRoot = configuration;
 			Site = configuration["site"];
-			Output = configuration.GetSection("output").Get<OutputSettings>();
 		}
 
 		public string Site { get; set; }
-		public OutputSettings Output { get; set; }
 		public IConfigurationRoot ConfigurationRoot { get; set; }
 	}
 }

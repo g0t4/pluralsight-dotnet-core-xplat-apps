@@ -14,6 +14,7 @@ namespace CheckLinksConsole
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHangfire(c => c.UseMemoryStorage());
+            services.AddTransient<CheckLinkJob>();
         }
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
